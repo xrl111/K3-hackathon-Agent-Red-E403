@@ -169,7 +169,14 @@ const fetchTraces = async () => {
 onMounted(() => {
   fetchStatus();
   fetchTraces();
-  pollInterval = setInterval(fetchStatus, 3000);
+  pollInterval = setInterval(() => {
+    if (status.value?.status === 'COMPLETED' || status.value?.status === 'FAILED') {
+      clearInterval(pollInterval);
+      return;
+    }
+    fetchStatus();
+    fetchTraces();
+  }, 3000);
 });
 
 onUnmounted(() => clearInterval(pollInterval));

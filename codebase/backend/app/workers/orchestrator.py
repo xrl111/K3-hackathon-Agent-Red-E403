@@ -58,6 +58,7 @@ class TestOrchestrator:
                 chroma_collection = None
 
             # Simulate processing test_cases
+            consecutive_failures = 0
             for index, test_case in enumerate(test_cases, start=1):
                 # Simulated delay (e.g. 0.1s to make 70 cases faster, or 0.5s)
                 time.sleep(0.1)
@@ -110,8 +111,18 @@ class TestOrchestrator:
                         model_response = data["response"]
                     else:
                         model_response = str(data)
+                        
+                    consecutive_failures = 0 # Reset on success
                 except Exception as e:
                     model_response = f"Failed to connect to target URL: {e}"
+                    consecutive_failures += 1
+                    
+                    if consecutive_failures >= 3:
+                        print(f"Orchestrator Error: Aborting assessment, target URL unreachable 3 times.")
+                        assessment.status = "FAILED"
+                        session.add(assessment)
+                        session.commit()
+                        return # Kill the process
                 
                 # Evaluate using deterministic rules and LLM Judge
                 eval_result = evaluate_test_case(prompt, model_response, test_case, canaries)

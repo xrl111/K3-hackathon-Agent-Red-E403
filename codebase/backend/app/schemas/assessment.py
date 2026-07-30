@@ -46,6 +46,9 @@ class AssessmentStatusResponse(BaseModel):
     status: str
     progress: Optional[str] = None
     current_phase: Optional[str] = None
+    progress_percentage: int = 0
+    completed_tests: int = 0
+    total_tests: int = 70
 
 
 class AssessmentReportMetrics(BaseModel):
