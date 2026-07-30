@@ -64,12 +64,16 @@ async def get_assessment_status(
     
     progress_str = f"{completed_turns}/{total_turns} tests completed"
     current_phase = "Sending Prompts" if assessment.status == "RUNNING" else "Idle"
+    progress_percentage = int((completed_turns / total_turns) * 100) if total_turns > 0 else 0
 
     return AssessmentStatusResponse(
         assessment_id=assessment.id,
         status=assessment.status,
         progress=progress_str,
-        current_phase=current_phase
+        current_phase=current_phase,
+        progress_percentage=progress_percentage,
+        completed_tests=completed_turns,
+        total_tests=total_turns
     )
 
 @router.get(

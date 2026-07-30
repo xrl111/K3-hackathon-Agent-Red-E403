@@ -76,8 +76,9 @@ async def get_assessment_report(
         recommendation = "NO GO"
         
     # Load testcases to map Trace turn to Category for Radar Chart
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-    testcases_path = os.path.join(base_dir, "data _Red_Team", "pi_rag_security_checker_70_testcases_en.json")
+    from pathlib import Path
+    base_dir = Path(__file__).resolve().parents[6]
+    testcases_path = base_dir / "data _Red_Team" / "pi_rag_security_checker_70_testcases_en.json"
     
     category_stats = {}
     try:
