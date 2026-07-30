@@ -1,0 +1,55 @@
+# AI Agent Global Rules & Project Architecture
+
+You are an AI coding assistant working on the Mini Hackathon AI (K3).
+This file defines the strict guidelines you must follow when writing code in this repository. 
+Any time you are invoked, you MUST read this file and comply with its instructions.
+
+## 1. Project Context & Setup
+- **Objective:** We are building an AI product feature moving from SPEC → Prototype → Demo.
+- **Tech Stack:**
+  - Backend: FastAPI (Python 3.10+)
+  - Frontend: Vue.js 3 (Composition API, Pinia, Vue Router) + Vite + TailwindCSS
+- **Key Directories:**
+  - `/docs/architecture/`: System design & coding guidelines (Source of truth).
+  - `/docs/architecture/00-workflow-sdlc.md`: MANDATORY SDLC process for AI agents.
+  - `/codebase/backend/`: Backend logic adhering to Pragmatic Clean Architecture.
+  - `/codebase/frontend/`: Frontend Vue app.
+  - `/eval/`: Golden sets and test results.
+  - `/validation/`: User feedback logs.
+
+## 2. Dual-Judge Evaluation Protocol
+Before finalizing any architectural design or complex block of code, you MUST evaluate it internally via two personas and print the report:
+1. **[Judge Claude - Architecture Expert]:** Focuses on business logic, Clean Architecture, maintainability, scalability, and UX/DX.
+2. **[Judge Codex - Strict Compiler]:** Focuses on syntax, type safety, performance (N+1, Big O), security (CORS, injection), and compiler strictness.
+3. **[Chief Architect's Verdict]:** Synthesizes both to output the absolute most optimal code.
+
+## 3. Backend Rules (FastAPI)
+- **Architecture:** Pragmatic Clean Architecture.
+  - `/api`: Routers and endpoints. DTO conversions happen here.
+  - `/core`: App config, security, dependencies, and DB connection setup.
+  - `/domain`: `models/` for DB entities (SQLAlchemy), `schemas/` for Pydantic V2 definitions.
+  - `/services`: Core business logic and use cases.
+  - `/infrastructure`: External APIs, Database implementation (Repositories).
+- **Strictness:**
+  - Always use asynchronous endpoints (`async def`).
+  - Use Dependency Injection (`Depends()`) for DB sessions and external clients.
+  - Enforce Pydantic V2 for all data validation.
+  - Handle exceptions gracefully with centralized error handlers.
+
+## 4. Frontend Rules (Vue.js 3)
+- **Architecture:**
+  - Use `<script setup>` (Composition API) exclusively.
+  - `/components/common`: Reusable UI components.
+  - `/views`: Page-level components.
+  - `/stores`: State management using Pinia.
+  - `/composables`: Reusable logic and lifecycle hooks.
+  - `/services`: Axios/Fetch API calls to the backend.
+- **Strictness:**
+  - Use TypeScript strictly. No `any` types.
+  - Keep components small and focused.
+  - API calls should be encapsulated in `/services` and managed via composables or Pinia.
+
+## 5. Collaboration & Documentation
+- Update `docs/memory/` and `docs/architecture/` proactively if you make significant architectural shifts.
+- Keep PRs/Commits atomic. Do not refactor unrelated code.
+- "Vibe-coding rule": Ensure any code you write can be explained by human contributors. Maintain readability.
