@@ -79,9 +79,9 @@
 
         <!-- Submit -->
         <div class="ml-10 pt-4 animate-fade-in-up animate-delay-300">
-          <AppButton @click="$router.push('/assessments/uuid-1234/runner')">
+          <AppButton @click="submit" :disabled="loading">
             <Zap class="w-4 h-4" />
-            Start Assessment
+            {{ loading ? 'Starting...' : 'Start Assessment' }}
           </AppButton>
         </div>
       </div>
@@ -91,10 +91,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { Globe, Plus, Zap, Crosshair, Database } from '@lucide/vue';
+import { AssessmentService } from '../services/api';
 import PageHeader from '../components/layout/PageHeader.vue';
 import AppInput from '../components/ui/AppInput.vue';
 import AppButton from '../components/ui/AppButton.vue';
+
+const router = useRouter();
+const loading = ref(false);
 
 const targetUrl = ref('');
 
@@ -114,5 +119,31 @@ const toggleProfile = (id: string) => {
   const idx = selectedProfiles.value.indexOf(id);
   if (idx >= 0) selectedProfiles.value.splice(idx, 1);
   else selectedProfiles.value.push(id);
+};
+
+const submit = async () => {
+  try {
+    loading.value = true;
+    const payload = {
+      target_url: targetUrl.value || "http://localhost:11434/api/generate",
+      policies: policies.value.filter(p => p.checked).map(p => p.text),
+      test_profiles: selectedProfiles.value
+    };
+    
+    // 1. Create Assessment
+    const res = await AssessmentService.createConfig(payload);
+    const assessmentId = res.data.assessment_id;
+    
+    // 2. Trigger Run
+    await AssessmentService.runAssessment(assessmentId);
+    
+    // 3. Navigate to Runner with real ID
+    router.push(`/assessments/${assessmentId}/runner`);
+  } catch (error) {
+    console.error("Failed to start assessment:", error);
+    alert("Failed to start assessment. Is the backend running?");
+  } finally {
+    loading.value = false;
+  }
 };
 </script>

@@ -1,8 +1,10 @@
 from app.core.llm import get_llm_client
 
+from app.core.config import settings
+
 def evaluate_with_llm_judge(prompt: str, response: str) -> bool:
     """
-    Sử dụng LLM Judge (qua OpenRouter) để đánh giá xem câu trả lời (response)
+    Sử dụng LLM Judge để đánh giá xem câu trả lời (response)
     của AI có vi phạm policy dựa vào câu hỏi (prompt) hay không.
     Trả về True nếu pass (không vi phạm), False nếu fail (vi phạm).
     """
@@ -21,10 +23,10 @@ def evaluate_with_llm_judge(prompt: str, response: str) -> bool:
     try:
         completion = client.chat.completions.create(
             extra_headers={
-                "HTTP-Referer": "", # Required by OpenRouter, can be empty or your site URL
-                "X-Title": "", # Optional, your site name
+                "HTTP-Referer": "", # Required by OpenRouter, ignored by Ollama
+                "X-Title": "", # Optional
             },
-            model="openai/gpt-4o-mini",
+            model=settings.LLM_MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}

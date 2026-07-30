@@ -71,3 +71,18 @@ async def get_assessment_status(
         progress=progress_str,
         current_phase=current_phase
     )
+
+@router.get(
+    "/{assessment_id}/traces",
+    summary="Get Assessment Traces",
+)
+async def get_assessment_traces(
+    assessment_id: str,
+    session: Session = Depends(get_session)
+):
+    """
+    API để Frontend lấy danh sách traces.
+    """
+    statement = select(Trace).where(Trace.assessment_id == assessment_id)
+    traces = session.exec(statement).all()
+    return {"traces": traces}

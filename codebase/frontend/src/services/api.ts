@@ -1,45 +1,37 @@
 import axios from 'axios';
-import { 
-  mockAssessmentConfig, 
-  mockStatus, 
-  mockTraces, 
-  mockFindings, 
-  mockReport 
-} from '../mocks';
 
 // In a real app, this would be an actual Axios instance pointing to the backend.
 const api = axios.create({
-  baseURL: '/api/v1'
+  baseURL: 'http://localhost:8000/api/v1' // Assuming FastAPI runs on 8000
 });
 
-// Helper to simulate network latency
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 export const AssessmentService = {
+  async createConfig(payload: any) {
+    return api.post('/assessments', payload);
+  },
+
+  async runAssessment(id: string) {
+    return api.post(`/assessments/${id}/run`);
+  },
+
   async getConfig(id: string) {
-    await delay(300);
-    return { data: mockAssessmentConfig };
+    return api.get(`/assessments/${id}`);
   },
 
   async getStatus(id: string) {
-    await delay(200);
-    // Simulate progression if we want, or just return mock Status
-    return { data: mockStatus };
+    return api.get(`/assessments/${id}/status`);
   },
 
   async getTraces(id: string) {
-    await delay(400);
-    return { data: mockTraces };
+    return api.get(`/assessments/${id}/traces`);
   },
 
   async getFindings(id: string) {
-    await delay(500);
-    return { data: mockFindings };
+    return api.get(`/assessments/${id}/findings`);
   },
 
   async getReport(id: string) {
-    await delay(300);
-    return { data: mockReport };
+    return api.get(`/assessments/${id}/report`);
   }
 };
 

@@ -25,7 +25,10 @@ class TestOrchestrator:
             session.commit()
 
             # Load testcases from JSON file
-            testcases_path = r"d:\VinAI\code\K3-hackathon-Agent-Red-E403\data _Red_Team\pi_rag_security_checker_70_testcases_en.json"
+            import os
+            # Build correct path relative to the project root
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+            testcases_path = os.path.join(base_dir, "data _Red_Team", "pi_rag_security_checker_70_testcases_en.json")
             try:
                 with open(testcases_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
@@ -46,14 +49,44 @@ class TestOrchestrator:
                 test_name = test_case.get("name", "Unknown test")
                 test_id = test_case.get("id", "Unknown ID")
                 
-                # Create a Trace
-                # In a real scenario, this would send an HTTP POST to `assessment.target_url`
+                import requests
+                from app.services.evaluator_svc import evaluate_with_llm_judge
+                
+                # Send HTTP POST to assessment.target_url
+                target_url = assessment.target_url
+                headers = {}
+                # Handle OpenAI / Ollama generic chat completions format
+                payload = {
+                    "model": "llama3", # Default if Ollama
+                    "messages": [{"role": "user", "content": prompt}],
+                    "prompt": prompt, # For Ollama /api/generate fallback
+                    "stream": False
+                }
+                
+                try:
+                    res = requests.post(target_url, json=payload, headers=headers, timeout=30)
+                    res.raise_for_status()
+                    data = res.json()
+                    
+                    # Extract response text (handle both /chat/completions and /api/generate)
+                    if "choices" in data and len(data["choices"]) > 0:
+                        model_response = data["choices"][0]["message"]["content"]
+                    elif "response" in data:
+                        model_response = data["response"]
+                    else:
+                        model_response = str(data)
+                except Exception as e:
+                    model_response = f"Failed to connect to target URL: {e}"
+                
+                # Evaluate using LLM Judge
+                evaluator_pass = evaluate_with_llm_judge(prompt, model_response)
+
                 trace = Trace(
                     assessment_id=assessment.id,
                     turn=index,
                     prompt_sent=prompt,
-                    model_response=f"Simulated response for test case: {test_name} ({test_id})",
-                    evaluator_pass=True  # Simulated passing evaluator
+                    model_response=model_response,
+                    evaluator_pass=evaluator_pass
                 )
                 session.add(trace)
                 session.commit()

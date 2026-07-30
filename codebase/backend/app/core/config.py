@@ -17,8 +17,10 @@ class Settings(BaseSettings):
     CHROMA_DEFAULT_COLLECTION: str = "default_collection"
     HF_EMBEDDING_MODEL: str = "bkai-foundation-models/vietnamese-bi-encoder"
 
-    # OpenRouter
-    OPENROUTER_API_KEY: str = ""
+    # LLM Settings (OpenRouter or Ollama)
+    LLM_API_KEY: str = "ollama"
+    LLM_BASE_URL: str = "https://openrouter.ai/api/v1"
+    LLM_MODEL: str = "openai/gpt-4o-mini"
 
     @property
     def CHROMA_PERSIST_DIRECTORY(self) -> str:
