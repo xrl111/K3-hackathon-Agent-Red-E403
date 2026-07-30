@@ -3,12 +3,12 @@
     <!-- Top Navbar -->
     <AppNavbar />
 
-    <div class="flex h-[calc(100vh-56px)]">
+    <div class="flex min-h-[calc(100vh-80px)]">
       <!-- Left Sidebar -->
       <AppSidebar />
 
       <!-- Main Content Area -->
-      <main class="flex-1 overflow-y-auto relative" :style="mainBgStyle">
+      <main class="flex-1 relative" :style="mainBgStyle">
         <!-- Slight blur for the background image -->
         <div class="absolute inset-0 backdrop-blur-[3px] pointer-events-none"></div>
         <div class="relative z-10 max-w-6xl mx-auto px-8 py-8">

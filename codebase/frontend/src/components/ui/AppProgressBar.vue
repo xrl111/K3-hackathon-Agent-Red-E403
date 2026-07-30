@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<{
 });
 
 const barColor = computed(() => ({
-  cyan: 'bg-cyber-cyan shadow-[0_0_12px_rgba(6,182,212,0.4)]',
+  cyan: 'bg-cyber-cyan shadow-[0_0_12px_rgba(250,204,21,0.4)]',
   danger: 'bg-severity-critical shadow-[0_0_12px_rgba(239,68,68,0.4)]',
   warning: 'bg-severity-high shadow-[0_0_12px_rgba(245,158,11,0.4)]',
   success: 'bg-status-pass shadow-[0_0_12px_rgba(16,185,129,0.4)]',

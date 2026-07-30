@@ -1,6 +1,9 @@
 <template>
   <div>
     <PageHeader title="Executive Dashboard" :subtitle="`Final Report — Assessment ${assessmentId}`">
+      <template #subtitle>
+        <p class="text-sm text-slate-300 mt-1">Final Report — Assessment <span class="text-yellow-400">{{ assessmentId }}</span></p>
+      </template>
       <template #actions>
         <AppButton variant="secondary">
           <Download class="w-4 h-4" />
@@ -21,7 +24,7 @@
                  style="filter: blur(40px);">
             </div>
 
-            <h2 class="text-xs font-semibold text-text-muted uppercase tracking-widest mb-8">Readiness Score</h2>
+            <h2 class="text-xs font-semibold text-slate-300 uppercase tracking-widest mb-8">Readiness Score</h2>
 
             <ScoreGauge
               :value="report.readiness_score"
@@ -70,7 +73,7 @@
           <AppCard title="Vulnerability Breakdown" :padding="false" class="animate-fade-in-up animate-delay-400">
             <div class="p-6 space-y-5">
               <div v-for="item in breakdownItems" :key="item.label" class="flex items-center gap-4">
-                <div class="w-20 text-xs font-medium text-text-muted uppercase tracking-wider">{{ item.label }}</div>
+                <div class="w-20 text-xs font-medium text-slate-300 uppercase tracking-wider">{{ item.label }}</div>
                 <div class="flex-1 h-2.5 bg-surface-elevated rounded-full overflow-hidden">
                   <div
                     :class="item.barColor"
@@ -88,7 +91,7 @@
             <div class="p-6">
               <div class="space-y-4">
                 <div v-for="(label, i) in report.radar_chart.labels" :key="label" class="flex items-center gap-4">
-                  <div class="w-36 text-xs font-medium text-text-muted">{{ label }}</div>
+                  <div class="w-36 text-xs font-medium text-slate-300">{{ label }}</div>
                   <div class="flex-1 h-2 bg-surface-elevated rounded-full overflow-hidden">
                     <div
                       class="h-full rounded-full bg-cyber-cyan transition-all duration-1000 ease-out"

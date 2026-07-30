@@ -19,6 +19,21 @@
               placeholder="https://api.project-target.com/chat"
               :icon="Globe"
             />
+            <div v-if="onboardingStep === 1" class="guide-bubble mt-4">
+              <div class="guide-bubble__arrow"></div>
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="guide-bubble__eyebrow">STEP 1 OF 3</p>
+                  <h3 class="guide-bubble__title">Start here</h3>
+                  <p class="guide-bubble__copy">Paste the API endpoint for the AI system you want to assess.</p>
+                </div>
+                <button class="guide-bubble__skip" @click="completeOnboarding">Skip</button>
+              </div>
+              <div class="guide-bubble__actions">
+                <span class="guide-bubble__dots"><i class="is-active"></i><i></i><i></i></span>
+                <button class="guide-bubble__next" @click="onboardingStep = 2">Next</button>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -37,7 +52,7 @@
               <input
                 type="checkbox"
                 :checked="policy.checked"
-                class="w-4 h-4 rounded border-surface-border text-cyber-cyan focus:ring-cyber-cyan/30 bg-surface-card"
+                class="w-4 h-4 rounded border-surface-border accent-yellow-400 text-yellow-400 focus:ring-yellow-400/30 bg-surface-card"
               />
               <span class="text-sm text-text-secondary group-hover:text-text-primary transition-colors">{{ policy.text }}</span>
             </label>
@@ -45,6 +60,22 @@
               <Plus class="w-3.5 h-3.5" />
               Add Custom Policy
             </button>
+            <div v-if="onboardingStep === 2" class="guide-bubble mt-4">
+              <div class="guide-bubble__arrow"></div>
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="guide-bubble__eyebrow">STEP 2 OF 3</p>
+                  <h3 class="guide-bubble__title">Choose your guardrails</h3>
+                  <p class="guide-bubble__copy">Select the policies the target must follow during the assessment.</p>
+                </div>
+                <button class="guide-bubble__skip" @click="completeOnboarding">Skip</button>
+              </div>
+              <div class="guide-bubble__actions">
+                <button class="guide-bubble__back" @click="onboardingStep = 1">Back</button>
+                <span class="guide-bubble__dots"><i></i><i class="is-active"></i><i></i></span>
+                <button class="guide-bubble__next" @click="onboardingStep = 3">Next</button>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -72,7 +103,23 @@
               </div>
               <p class="text-xs text-text-muted mt-2 leading-relaxed">{{ profile.description }}</p>
               <!-- Selected indicator -->
-              <div v-if="selectedProfiles.includes(profile.id)" class="absolute top-3 right-3 w-2 h-2 rounded-full bg-cyber-cyan shadow-[0_0_6px_rgba(6,182,212,0.6)]"></div>
+              <div v-if="selectedProfiles.includes(profile.id)" class="absolute top-3 right-3 w-2 h-2 rounded-full bg-cyber-cyan shadow-[0_0_6px_rgba(250,204,21,0.6)]"></div>
+            </div>
+          </div>
+          <div v-if="onboardingStep === 3" class="guide-bubble ml-10 mt-4">
+            <div class="guide-bubble__arrow"></div>
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="guide-bubble__eyebrow">STEP 3 OF 3</p>
+                <h3 class="guide-bubble__title">Pick test profiles</h3>
+                <p class="guide-bubble__copy">Start with Direct Injection and RAG Poisoning, then launch your assessment.</p>
+              </div>
+              <button class="guide-bubble__skip" @click="completeOnboarding">Skip</button>
+            </div>
+            <div class="guide-bubble__actions">
+              <button class="guide-bubble__back" @click="onboardingStep = 2">Back</button>
+              <span class="guide-bubble__dots"><i></i><i></i><i class="is-active"></i></span>
+              <button class="guide-bubble__next" @click="completeOnboarding">Done</button>
             </div>
           </div>
         </section>
@@ -102,6 +149,16 @@ const router = useRouter();
 const loading = ref(false);
 
 const targetUrl = ref('');
+const onboardingStep = ref(0);
+
+onMounted(() => {
+  if (!localStorage.getItem('pi-rag-onboarding-completed')) onboardingStep.value = 1;
+});
+
+const completeOnboarding = () => {
+  onboardingStep.value = 0;
+  localStorage.setItem('pi-rag-onboarding-completed', 'true');
+};
 
 const policies = ref([
   { text: 'Do not disclose CANARY_SECRET', checked: true },
@@ -147,3 +204,43 @@ const submit = async () => {
   }
 };
 </script>
+
+<style scoped>
+.guide-bubble {
+  position: relative;
+  max-width: 35rem;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(250, 204, 21, 0.55);
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.1), 0 14px 32px rgba(0, 0, 0, 0.3);
+  animation: guideEnter 240ms ease-out;
+}
+
+.guide-bubble__arrow {
+  position: absolute;
+  top: -7px;
+  left: 1.5rem;
+  width: 12px;
+  height: 12px;
+  background: rgba(15, 23, 42, 0.96);
+  border-top: 1px solid rgba(250, 204, 21, 0.55);
+  border-left: 1px solid rgba(250, 204, 21, 0.55);
+  transform: rotate(45deg);
+}
+
+.guide-bubble__eyebrow { color: #facc15; font-size: 0.55rem; letter-spacing: 0.1em; }
+.guide-bubble__title { margin: 0.45rem 0; color: #fff; font-size: 0.75rem; }
+.guide-bubble__copy { color: #94a3b8; font-size: 0.625rem; line-height: 1.65; }
+.guide-bubble__actions { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; }
+.guide-bubble__skip, .guide-bubble__back { color: #94a3b8; font-size: 0.55rem; }
+.guide-bubble__next { padding: 0.5rem 0.7rem; color: #111827; background: #facc15; border-radius: 0.375rem; font-size: 0.55rem; }
+.guide-bubble__dots { display: flex; gap: 0.35rem; }
+.guide-bubble__dots i { width: 5px; height: 5px; border-radius: 50%; background: #475569; }
+.guide-bubble__dots i.is-active { background: #facc15; }
+
+@keyframes guideEnter {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
