@@ -137,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Globe, Plus, Zap, Crosshair, Database } from '@lucide/vue';
 import { AssessmentService } from '../services/api';
@@ -180,9 +180,21 @@ const toggleProfile = (id: string) => {
 
 const submit = async () => {
   try {
+    const url = targetUrl.value || "http://localhost:11434/api/generate";
+    try {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+        alert("Target URL must use HTTP or HTTPS protocol.");
+        return;
+      }
+    } catch (e) {
+      alert("Invalid URL format.");
+      return;
+    }
+
     loading.value = true;
     const payload = {
-      target_url: targetUrl.value || "http://localhost:11434/api/generate",
+      target_url: url,
       policies: policies.value.filter(p => p.checked).map(p => p.text),
       test_profiles: selectedProfiles.value
     };

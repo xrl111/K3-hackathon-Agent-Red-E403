@@ -90,15 +90,15 @@
           <AppCard title="Security Dimensions" :padding="false" class="animate-fade-in-up animate-delay-500">
             <div class="p-6">
               <div class="space-y-4">
-                <div v-for="(label, i) in report.radar_chart.labels" :key="label" class="flex items-center gap-4">
+                <div v-for="(label, i) in report.radar_chart?.labels || []" :key="label" class="flex items-center gap-4">
                   <div class="w-36 text-xs font-medium text-slate-300">{{ label }}</div>
                   <div class="flex-1 h-2 bg-surface-elevated rounded-full overflow-hidden">
                     <div
                       class="h-full rounded-full bg-cyber-cyan transition-all duration-1000 ease-out"
-                      :style="{ width: `${report.radar_chart.data[i]}%` }"
+                      :style="{ width: `${report.radar_chart?.data?.[i] || 0}%` }"
                     ></div>
                   </div>
-                  <span class="text-xs font-mono font-bold text-cyber-cyan w-8 text-right">{{ report.radar_chart.data[i] }}%</span>
+                  <span class="text-xs font-mono font-bold text-cyber-cyan w-8 text-right">{{ report.radar_chart?.data?.[i] || 0 }}%</span>
                 </div>
               </div>
             </div>

@@ -38,7 +38,7 @@
     <!-- Bottom info -->
     <div class="p-4 border-t border-surface-border">
       <div class="text-[10px] text-text-muted uppercase tracking-wider">Current ID</div>
-      <div class="text-xs font-mono text-text-secondary mt-1 truncate">uuid-1234</div>
+      <div class="text-xs font-mono text-text-secondary mt-1 truncate">{{ currentAssessmentId || 'None' }}</div>
     </div>
   </aside>
 </template>
@@ -49,15 +49,24 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const navItems = [
+const currentAssessmentId = computed(() => {
+  const id = route.params.id as string;
+  if (id) {
+    localStorage.setItem('current-assessment-id', id);
+    return id;
+  }
+  return localStorage.getItem('current-assessment-id') || '';
+});
+
+const navItems = computed(() => [
   { label: 'New Assessment', path: '/assessments/new' },
-  { label: 'Test Runner', path: '/assessments/uuid-1234/runner' },
-  { label: 'Findings', path: '/assessments/uuid-1234/findings' },
-  { label: 'Report', path: '/assessments/uuid-1234/report' },
-];
+  { label: 'Test Runner', path: `/assessments/${currentAssessmentId.value}/runner` },
+  { label: 'Findings', path: `/assessments/${currentAssessmentId.value}/findings` },
+  { label: 'Report', path: `/assessments/${currentAssessmentId.value}/report` },
+]);
 
 const currentIndex = computed(() => {
-  return navItems.findIndex(item => route.path === item.path);
+  return navItems.value.findIndex(item => route.path === item.path);
 });
 
 const isActive = (path: string) => route.path === path;

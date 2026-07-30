@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette import status
 
 from app.api.v1.router import api_router
 from app.core.config import settings
@@ -23,6 +25,20 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     lifespan=lifespan
 )
+
+MAX_PAYLOAD_SIZE = 5 * 1024 * 1024 # 5 MB
+
+@app.middleware("http")
+async def limit_upload_size(request: Request, call_next):
+    if request.method in ["POST", "PUT", "PATCH"]:
+        if request.headers.get("content-length"):
+            content_length = int(request.headers["content-length"])
+            if content_length > MAX_PAYLOAD_SIZE:
+                return JSONResponse(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    content={"detail": "Payload too large. Maximum size is 5MB."}
+                )
+    return await call_next(request)
 
 # Setup CORS
 if settings.BACKEND_CORS_ORIGINS:

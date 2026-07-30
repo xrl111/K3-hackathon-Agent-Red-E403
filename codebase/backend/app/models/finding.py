@@ -15,9 +15,11 @@ class Finding(SQLModel, table=True):
     trace_id: Optional[str] = Field(default=None, foreign_key="traces.id", index=True, nullable=True)
     severity: str = Field(default="MEDIUM", nullable=False, description="CRITICAL, HIGH, MEDIUM, LOW, INFO")
     type: str = Field(default="VULNERABILITY", nullable=False, description="RAG_POISONING, CANARY_LEAK, DIRECT_INJECTION")
+    description: str = Field(default="", nullable=False)
     status: str = Field(default="OPEN", nullable=False, description="OPEN, CONFIRMED, FALSE_POSITIVE, MANUAL_VERIFICATION")
     human_reviewer_comment: Optional[str] = Field(default=None, nullable=True)
     remediation: Optional[str] = Field(default=None, nullable=True)
+    evaluator_reason: Optional[str] = Field(default=None, nullable=True)
 
     # Relationships
     assessment: Optional["Assessment"] = Relationship(back_populates="findings")

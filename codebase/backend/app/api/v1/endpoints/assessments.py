@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
+from app.core.validators import validate_target_url
 
 from app.core.database import get_session
 from app.schemas.assessment import (
@@ -23,6 +24,7 @@ async def create_assessment(
     session: Session = Depends(get_session),
 ):
     """Khởi tạo phiên đánh giá mới và lưu cấu hình vào database."""
+    validate_target_url(payload.target_url)
     assessment = AssessmentService.create_assessment(session=session, payload=payload)
     return AssessmentCreateResponse(
         assessment_id=assessment.id,

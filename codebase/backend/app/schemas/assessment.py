@@ -51,12 +51,15 @@ class AssessmentStatusResponse(BaseModel):
 class AssessmentReportMetrics(BaseModel):
     attack_success_rate_asr: str
     poison_retrieval_rate_prr: str
+    total_tests_run: int
     total_critical: int
     total_high: int
+    total_medium: int
 
 
 class AssessmentReportResponse(BaseModel):
     readiness_score: int
     recommendation: str
     metrics: AssessmentReportMetrics
+    radar_chart: dict
 

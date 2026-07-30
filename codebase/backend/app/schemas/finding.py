@@ -8,6 +8,8 @@ class FindingCreate(BaseModel):
     severity: str = Field(default="MEDIUM", description="CRITICAL, HIGH, MEDIUM, LOW, INFO")
     type: str = Field(default="VULNERABILITY", description="RAG_POISONING, CANARY_LEAK, DIRECT_INJECTION")
     status: str = Field(default="OPEN", description="OPEN, CONFIRMED, FALSE_POSITIVE, MANUAL_VERIFICATION")
+    description: str = Field(default="")
+    evaluator_reason: Optional[str] = None
     human_reviewer_comment: Optional[str] = None
     remediation: Optional[str] = None
 
@@ -24,7 +26,9 @@ class FindingResponse(BaseModel):
     trace_id: Optional[str] = None
     severity: str
     type: str
+    description: str
     status: str
+    evaluator_reason: Optional[str] = None
     human_reviewer_comment: Optional[str] = None
     remediation: Optional[str] = None
 

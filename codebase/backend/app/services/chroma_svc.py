@@ -5,6 +5,46 @@ from app.schemas.rag import RagInjectRequest, RagInjectResponse
 
 class ChromaService:
     @staticmethod
+    def inject_test_corpus(assessment_id: str, clean_docs: list, poisoned_docs: list):
+        client = get_chroma_client()
+        collection_name = f"rag_sandbox_{assessment_id}"
+        
+        # Get or create collection
+        collection = client.get_or_create_collection(name=collection_name)
+        
+        ids = []
+        documents = []
+        metadatas = []
+        
+        for doc in clean_docs:
+            ids.append(doc.get("chunk_id", f"clean_{uuid.uuid4()}"))
+            documents.append(doc.get("content", ""))
+            metadatas.append({
+                "is_poisoned": False,
+                "source_id": doc.get("source_id", ""),
+                "trust_level": doc.get("trust_level", "trusted")
+            })
+            
+        for doc in poisoned_docs:
+            ids.append(doc.get("chunk_id", f"poison_{uuid.uuid4()}"))
+            documents.append(doc.get("content", ""))
+            metadatas.append({
+                "is_poisoned": True,
+                "source_id": doc.get("source_id", ""),
+                "trust_level": doc.get("trust_level", "untrusted")
+            })
+            
+        if ids:
+            collection.add(
+                ids=ids,
+                documents=documents,
+                metadatas=metadatas
+            )
+            
+        return collection
+
+
+    @staticmethod
     def inject_documents(assessment_id: str, request: RagInjectRequest) -> RagInjectResponse:
         """
         Creates a new ChromaDB collection, chunks the input texts, simulates poisoned chunks,

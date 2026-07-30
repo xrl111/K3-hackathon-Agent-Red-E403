@@ -141,9 +141,28 @@ const fetchStatus = async () => {
 
 const fetchTraces = async () => {
   const res = await AssessmentService.getTraces(assessmentId);
-  traces.value = res.data;
-  if (res.data.traces.length > 0 && !activeTrace.value) {
-    activeTrace.value = res.data.traces[0];
+  
+  const parsedTraces = res.data.traces.map((trace: any) => {
+    let chunks = [];
+    if (trace.retrieved_chunks_json) {
+      try {
+        const rawChunks = JSON.parse(trace.retrieved_chunks_json);
+        chunks = rawChunks.map((c: any, index: number) => ({
+          chunk_id: c.metadata?.source_id || `chunk-${index}`,
+          is_poisoned: c.metadata?.is_poisoned || false,
+          score: 0.99,
+          text: c.content
+        }));
+      } catch(e) {
+        console.error('Failed to parse chunks', e);
+      }
+    }
+    return { ...trace, retrieved_chunks: chunks };
+  });
+
+  traces.value = { ...res.data, traces: parsedTraces };
+  if (parsedTraces.length > 0 && !activeTrace.value) {
+    activeTrace.value = parsedTraces[0];
   }
 };
 
