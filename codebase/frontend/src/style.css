@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Press+Start+2P&display=swap');
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════
+   CyberShield Design System
+   Dark-first Cyberpunk Security Dashboard
+   ═══════════════════════════════════════════ */
+
+@theme {
+  /* Primary palette */
+  --color-cyber-cyan: #facc15;
+  --color-cyber-cyan-hover: #eab308;
+  --color-cyber-cyan-glow: rgba(250, 204, 21, 0.4);
+  --color-cyber-cyan-subtle: rgba(250, 204, 21, 0.08);
+
+  /* Severity palette */
+  --color-severity-critical: #ef4444;
+  --color-severity-critical-glow: rgba(239, 68, 68, 0.35);
+  --color-severity-high: #f59e0b;
+  --color-severity-high-glow: rgba(245, 158, 11, 0.35);
+  --color-severity-medium: #eab308;
+  --color-severity-medium-glow: rgba(234, 179, 8, 0.35);
+  --color-severity-low: #64748b;
+
+  /* Status palette */
+  --color-status-pass: #10b981;
+  --color-status-pass-glow: rgba(16, 185, 129, 0.35);
+  --color-status-fail: #ef4444;
+  --color-status-open: #f59e0b;
+  --color-status-pending: #64748b;
+
+  /* Surface palette */
+  --color-surface-bg: #020617;
+  --color-surface-card: #0f172a;
+  --color-surface-elevated: #1e293b;
+  --color-surface-border: #334155;
+  --color-surface-hover: rgba(255, 255, 255, 0.03);
+
+  /* Text palette */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+
+  /* Fonts */
+  --font-sans: 'Press Start 2P', "PP NeueBit", sans-serif;
+  --font-mono: 'Press Start 2P', "PP NeueBit", monospace;
+}
+
+/* ── Base ─────────────────────────────────── */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-surface-elevated) transparent;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-surface-bg);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: rgba(250, 204, 21, 0.3);
+  }
+}
+
+/* ── Utility Classes ──────────────────────── */
+@layer utilities {
+  /* Card glass surface */
+  .cyber-card {
+    background: rgba(100, 116, 139, 0.15);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 12px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .cyber-card:hover {
+    border-color: rgba(250, 204, 21, 0.3);
+  }
+
+  /* Glow border on focus/active */
+  .cyber-glow {
+    box-shadow:
+      0 0 0 1px rgba(250, 204, 21, 0.3),
+      0 0 20px -5px rgba(250, 204, 21, 0.2);
+  }
+
+  .cyber-glow-danger {
+    box-shadow:
+      0 0 0 1px rgba(239, 68, 68, 0.3),
+      0 0 20px -5px rgba(239, 68, 68, 0.2);
+  }
+
+  /* Input focus style */
+  .cyber-input {
+    background: var(--color-surface-card);
+    border: 1px solid var(--color-surface-border);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .cyber-input:focus {
+    outline: none;
+    border-color: var(--color-cyber-cyan);
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15);
+  }
+  .cyber-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  /* Scan line animation overlay */
+  .scan-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(250, 204, 21, 0.03) 50%,
+      transparent 100%
+    );
+    height: 30%;
+    animation: scanLine 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* Pulse ring for live indicators */
+  .pulse-ring {
+    position: relative;
+  }
+  .pulse-ring::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--color-cyber-cyan);
+    animation: pulseRing 2s ease-out infinite;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #fef08a, var(--color-cyber-cyan), #eab308);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* ── Keyframes ────────────────────────────── */
+@keyframes scanLine {
+  0%, 100% { top: -30%; }
+  50% { top: 100%; }
+}
+
+@keyframes pulseRing {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ── Page Transitions ─────────────────────── */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* ── Animation utility classes ────────────── */
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
+}
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+.animate-delay-400 { animation-delay: 400ms; }
+.animate-delay-500 { animation-delay: 500ms; }
