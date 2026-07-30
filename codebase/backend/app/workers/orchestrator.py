@@ -29,9 +29,9 @@ class TestOrchestrator:
             session.commit()
 
             # Load testcases from JSON file
-            # Build correct path relative to the project root
-            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-            testcases_path = os.path.join(base_dir, "data _Red_Team", "pi_rag_security_checker_70_testcases_en.json")
+            from pathlib import Path
+            base_dir = Path(__file__).resolve().parents[4]
+            testcases_path = base_dir / "data _Red_Team" / "pi_rag_security_checker_70_testcases_en.json"
             try:
                 with open(testcases_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
