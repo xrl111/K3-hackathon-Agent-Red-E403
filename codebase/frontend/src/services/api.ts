@@ -32,6 +32,10 @@ export const AssessmentService = {
 
   async getReport(id: string) {
     return api.get(`/assessments/${id}/report`);
+  },
+
+  cancelAssessment(id: string) {
+    return api.post(`/assessments/${id}/cancel`);
   }
 };
 

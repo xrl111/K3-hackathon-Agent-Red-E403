@@ -27,6 +27,14 @@
                 :icon="Globe"
               />
             </div>
+            <div class="mt-4">
+              <AppInput
+                v-model="canarySecret"
+                label="Canary Secret to Extract"
+                placeholder="SEC-K3-999"
+                :icon="Crosshair"
+              />
+            </div>
             <div v-if="onboardingStep === 1" class="guide-bubble mt-4">
               <div class="guide-bubble__arrow"></div>
               <div class="flex items-start justify-between gap-4">
@@ -158,6 +166,7 @@ const loading = ref(false);
 
 const targetUrl = ref('');
 const targetModel = ref('');
+const canarySecret = ref('SEC-K3-999');
 const onboardingStep = ref(0);
 
 onMounted(() => {
@@ -206,6 +215,7 @@ const submit = async () => {
       target_url: url,
       model: targetModel.value || "llama3",
       policies: policies.value.filter(p => p.checked).map(p => p.text),
+      canary_secrets: [canarySecret.value || "SEC-K3-999"],
       test_profiles: selectedProfiles.value
     };
     

@@ -18,11 +18,17 @@
         <div class="flex justify-between items-end mb-4">
           <div>
             <div class="text-[11px] font-medium text-text-muted uppercase tracking-wider">Current Phase</div>
-            <div class="text-base font-semibold text-cyber-cyan mt-1 flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_6px_rgba(250,204,21,0.5)]"></span>
+            <div class="text-base font-semibold mt-1 flex items-center gap-2" :class="status?.status === 'CANCELLED' ? 'text-severity-critical' : 'text-cyber-cyan'">
+              <span v-if="status?.status === 'RUNNING'" class="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_6px_rgba(250,204,21,0.5)]"></span>
+              <span v-else-if="status?.status === 'CANCELLED'" class="w-2 h-2 rounded-full bg-severity-critical"></span>
+              <span v-else class="w-2 h-2 rounded-full bg-cyber-cyan"></span>
               {{ status?.current_phase || 'Initializing...' }}
             </div>
           </div>
+          <AppButton v-if="status?.status === 'RUNNING'" variant="secondary" @click="cancelTest" class="border-severity-critical/20 text-severity-critical hover:bg-severity-critical/10">
+            <Square class="w-4 h-4" />
+            Stop
+          </AppButton>
         </div>
         <AppProgressBar
           :percentage="status?.progress_percentage || 0"
@@ -60,7 +66,14 @@
                   :class="activeTrace?.trace_id === trace.trace_id ? 'border-cyber-cyan/40 cyber-glow' : 'border-surface-border hover:border-cyber-cyan/20'"
                   @click="activeTrace = trace"
                 >
-                  <span class="trace-mono text-text-secondary">{{ trace.prompt }}</span>
+                  <!-- Agent Thought -->
+                  <div v-if="trace.agent_thought" class="mb-3 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 text-left">
+                    <div class="text-[10px] font-bold text-cyber-cyan mb-1 flex items-center gap-1 uppercase tracking-wider">
+                      <Terminal class="w-3 h-3" /> Agent Thought Process
+                    </div>
+                    <div class="trace-mono text-slate-400 text-xs italic">{{ trace.agent_thought }}</div>
+                  </div>
+                  <span class="trace-mono text-text-secondary">{{ trace.prompt_sent }}</span>
                   <!-- Evaluator badge -->
                   <div class="mt-2 flex items-center gap-2">
                     <AppBadge :severity="trace.evaluator_pass ? 'PASS' : 'FAIL'" :dot="true">
@@ -128,7 +141,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { Eye, Terminal, Database, Zap } from '@lucide/vue';
+import { Eye, Terminal, Database, Zap, Square } from '@lucide/vue';
 import { AssessmentService } from '../services/api';
 import PageHeader from '../components/layout/PageHeader.vue';
 import AppCard from '../components/ui/AppCard.vue';
@@ -153,21 +166,28 @@ const fetchTraces = async () => {
   const res = await AssessmentService.getTraces(assessmentId);
   
   const parsedTraces = res.data.traces.map((trace: any) => {
-    let chunks = [];
+    let chunks: any[] = [];
+    let thought = "";
     if (trace.retrieved_chunks_json) {
       try {
         const rawChunks = JSON.parse(trace.retrieved_chunks_json);
-        chunks = rawChunks.map((c: any, index: number) => ({
-          chunk_id: c.metadata?.source_id || `chunk-${index}`,
-          is_poisoned: c.metadata?.is_poisoned || false,
-          score: 0.99,
-          text: c.content
-        }));
+        rawChunks.forEach((c: any, index: number) => {
+          if (c.metadata?.is_thought) {
+            thought = c.content;
+          } else {
+            chunks.push({
+              chunk_id: c.metadata?.source_id || `chunk-${index}`,
+              is_poisoned: c.metadata?.is_poisoned || false,
+              score: 0.99,
+              text: c.content
+            });
+          }
+        });
       } catch(e) {
         console.error('Failed to parse chunks', e);
       }
     }
-    return { ...trace, retrieved_chunks: chunks };
+    return { ...trace, retrieved_chunks: chunks, agent_thought: thought };
   });
 
   traces.value = { ...res.data, traces: parsedTraces };
@@ -176,11 +196,24 @@ const fetchTraces = async () => {
   }
 };
 
+const cancelTest = async () => {
+  try {
+    await AssessmentService.cancelAssessment(assessmentId);
+    if (pollInterval) clearInterval(pollInterval);
+    if (status.value) {
+      status.value.status = 'CANCELLED';
+      status.value.current_phase = 'Assessment Cancelled';
+    }
+  } catch(e) {
+    console.error('Failed to cancel test', e);
+  }
+};
+
 onMounted(() => {
   fetchStatus();
   fetchTraces();
   pollInterval = setInterval(() => {
-    if (status.value?.status === 'COMPLETED' || status.value?.status === 'FAILED') {
+    if (status.value?.status === 'COMPLETED' || status.value?.status === 'FAILED' || status.value?.status === 'CANCELLED') {
       clearInterval(pollInterval);
       return;
     }

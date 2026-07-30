@@ -36,6 +36,28 @@ async def run_assessment(
     background_tasks.add_task(TestOrchestrator.run_assessment, assessment_id)
     return {"message": "Test started", "job_id": f"job-{assessment_id[:8]}"}
 
+@router.post(
+    "/{assessment_id}/cancel",
+    summary="Cancel a running assessment",
+)
+async def cancel_assessment(
+    assessment_id: str,
+    session: Session = Depends(get_session)
+):
+    """
+    Huỷ phiên đánh giá đang chạy.
+    """
+    assessment = session.get(Assessment, assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Not found")
+    
+    if assessment.status == "RUNNING":
+        assessment.status = "CANCELLED"
+        session.add(assessment)
+        session.commit()
+    
+    return {"message": "Assessment cancelled"}
+
 
 @router.get(
     "/{assessment_id}/status",
@@ -62,6 +84,7 @@ async def get_assessment_status(
     completed_turns = len(traces)
     total_turns = 5 # Updated for Agent max turns
     
+    progress_str = f"{completed_turns}/{total_turns} tests completed"
     breached = any(not t.evaluator_pass for t in traces)
     
     current_phase = "Sending Prompts" if assessment.status == "RUNNING" else "Idle"
@@ -70,6 +93,8 @@ async def get_assessment_status(
             current_phase = "Completed - Target Breached"
         else:
             current_phase = "Completed - Target Secure"
+    elif assessment.status == "CANCELLED":
+        current_phase = "Assessment Cancelled"
 
     progress_percentage = int((completed_turns / total_turns) * 100) if total_turns > 0 else 0
     if assessment.status == "COMPLETED":
