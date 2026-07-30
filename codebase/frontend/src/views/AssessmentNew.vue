@@ -140,11 +140,16 @@
           </div>
         </section>
 
-        <!-- Submit -->
-        <div class="ml-10 pt-4 animate-fade-in-up animate-delay-300">
+        <!-- Submit & Export -->
+        <div class="ml-10 pt-4 flex gap-4 items-center animate-fade-in-up animate-delay-300">
           <AppButton @click="submit" :disabled="loading">
             <Zap class="w-4 h-4" />
             {{ loading ? 'Starting...' : 'Start Assessment' }}
+          </AppButton>
+          
+          <AppButton variant="secondary" @click="exportDataset">
+            <Database class="w-4 h-4 text-cyber-cyan" />
+            Export Success Dataset (JSONL)
           </AppButton>
         </div>
       </div>
@@ -194,6 +199,10 @@ const toggleProfile = (id: string) => {
   const idx = selectedProfiles.value.indexOf(id);
   if (idx >= 0) selectedProfiles.value.splice(idx, 1);
   else selectedProfiles.value.push(id);
+};
+
+const exportDataset = () => {
+  window.open('http://127.0.0.1:8000/api/v1/assessments/export-dataset/jsonl', '_blank');
 };
 
 const submit = async () => {

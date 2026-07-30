@@ -33,6 +33,37 @@ async def create_assessment(
 
 
 @router.get(
+    "/export-dataset/jsonl",
+    summary="Export successful attacks dataset in JSONL format",
+)
+async def export_dataset(session: Session = Depends(get_session)):
+    """Xuất danh sách các lượt tấn công thành công dưới định dạng JSONL."""
+    from fastapi.responses import StreamingResponse
+    import io
+    import json
+    from sqlmodel import select
+    from app.models.trace import Trace
+    
+    traces = session.exec(select(Trace).where(Trace.evaluator_pass == False)).all()
+    
+    output = io.StringIO()
+    for trace in traces:
+        entry = {
+            "instruction": "Craft an attack to bypass the AI's defenses.",
+            "input": trace.prompt_sent,
+            "output": trace.model_response,
+            "turn": trace.turn
+        }
+        output.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        
+    output.seek(0)
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="application/jsonl",
+        headers={"Content-Disposition": "attachment; filename=redteam_dataset.jsonl"}
+    )
+
+@router.get(
     "/{assessment_id}",
     response_model=AssessmentResponse,
     summary="Lấy chi tiết cấu hình phiên đánh giá",
