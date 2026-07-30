@@ -1,11 +1,6 @@
-# Template AI Spec *(spec.md — commit trước 23:59 N1 · quality bar chốt từ thời điểm nộp)*
-
-> Cấu trúc phủ đúng "SPEC 8 phần" của chương trình: Bằng chứng (§1-§2) · Lát cắt (§4) · Canvas (đính kèm CP1) · Augment/Automate (§4) · 4 đường đi của trải nghiệm (§6) · Kiểu lỗi (§5) · Kiểm thử (§7) · Phân công (§8). Hướng dẫn viết từng mục: `02-guide.md`.
-
-```markdown
-# AI SPEC — [Tên lát cắt] · Nhóm [XX] · Zone [X]
-Hướng: [ ] A — VLearn  [ ] B — Trợ lý Học viên  [ ] C — Làn mở
-Loại: [ ] Tối ưu tính năng có sẵn  [ ] Tính năng mới
+# AI SPEC — [PI-RAG Checker] · Nhóm [Agent-Red-E403] · Zone [E403]
+Hướng: [] A — VLearn  [ ] B — Trợ lý Học viên  [x] C — Làn mở
+Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
 
 ## §1. User & Job
 
@@ -204,8 +199,6 @@ Phương án được chọn vì AI trực tiếp giải quyết phần tốn c�
 **Mình khác gì:** Hiển thị rõ prompt lineage, lý do chọn chiến thuật, memory được sử dụng, feedback của reviewer và trạng thái học của từng objective.
 
 ---
->>>>>>> Stashed changes
-
 ## §4. Thiết kế
 - Lát cắt MỘT CÂU (1 user · 1 việc · 1 quyết định AI · 1 kết quả):
 - Non-goals (≥3 thứ KHÔNG build):
