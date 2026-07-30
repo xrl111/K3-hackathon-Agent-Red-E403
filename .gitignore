@@ -20,3 +20,8 @@ dist-ssr/
 .idea/
 .vscode/
 /eval/golden_set_real_data.json
+
+# Databases
+chroma_db/
+*.db
+*.sqlite3

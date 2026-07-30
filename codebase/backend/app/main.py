@@ -1,32 +1,46 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+
+from app.api.v1.router import api_router
+from app.core.config import settings
+from app.core.database import create_db_and_tables
+from app.core.chroma import get_chroma_client
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Lifecycle event: Tạo các bảng SQLite và khởi tạo ChromaDB client khi app startup
+    create_db_and_tables()
+    get_chroma_client()
+    yield
+
 
 app = FastAPI(
-    title="K3 Hackathon API",
-    description="Backend API for AI Features",
-    version="1.0.0"
+    title=settings.PROJECT_NAME,
+    description="Backend API for PI-RAG Security Checker",
+    version=settings.VERSION,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan
 )
 
-# Setup CORS for Frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Trong thực tế nên giới hạn origin
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-class HealthCheckResponse(BaseModel):
-    status: str
-    message: str
-
-@app.get("/health", response_model=HealthCheckResponse, tags=["System"])
-async def health_check():
-    return HealthCheckResponse(
-        status="ok",
-        message="Backend is up and running!"
+# Setup CORS
+if settings.BACKEND_CORS_ORIGINS:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.BACKEND_CORS_ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
-# Thêm các router ở đây
-# app.include_router(my_router, prefix="/api/v1")
+# Đăng ký API router v1
+app.include_router(api_router, prefix=settings.API_V1_STR)
+
+
+@app.get("/")
+async def root():
+    return {
+        "message": f"Welcome to {settings.PROJECT_NAME}",
+        "docs": "/docs"
+    }
