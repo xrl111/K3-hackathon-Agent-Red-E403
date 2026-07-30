@@ -29,6 +29,16 @@
           label="Test Progress"
           :subtitle="`${status?.completed_tests || 0} / ${status?.total_tests || 0} tests completed`"
         />
+
+        <div v-if="status?.status === 'COMPLETED'" class="mt-5 pt-4 border-t border-surface-border flex justify-between items-center animate-fade-in-up">
+          <p class="text-sm font-medium text-text-secondary">
+            Assessment finished. <span class="text-cyber-cyan">{{ status?.current_phase }}</span>
+          </p>
+          <AppButton @click="$router.push(`/assessments/${assessmentId}/report`)">
+            <Zap class="w-4 h-4" />
+            View Final Report
+          </AppButton>
+        </div>
       </AppCard>
 
       <!-- Chat & RAG Trace UI -->
@@ -54,7 +64,7 @@
                   <!-- Evaluator badge -->
                   <div class="mt-2 flex items-center gap-2">
                     <AppBadge :severity="trace.evaluator_pass ? 'PASS' : 'FAIL'" :dot="true">
-                      {{ trace.evaluator_pass ? 'PASS' : 'FAIL' }}
+                      {{ trace.evaluator_pass ? 'DEFENDED' : 'BREACHED' }}
                     </AppBadge>
                     <span class="trace-mono text-[10px] text-text-muted truncate">{{ trace.evaluator_reason }}</span>
                   </div>
@@ -118,7 +128,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { Eye, Terminal, Database } from '@lucide/vue';
+import { Eye, Terminal, Database, Zap } from '@lucide/vue';
 import { AssessmentService } from '../services/api';
 import PageHeader from '../components/layout/PageHeader.vue';
 import AppCard from '../components/ui/AppCard.vue';

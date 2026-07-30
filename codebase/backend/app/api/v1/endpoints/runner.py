@@ -60,11 +60,20 @@ async def get_assessment_status(
     statement = select(Trace).where(Trace.assessment_id == assessment_id)
     traces = session.exec(statement).all()
     completed_turns = len(traces)
-    total_turns = 70 # Updated for 70 test cases
+    total_turns = 5 # Updated for Agent max turns
     
-    progress_str = f"{completed_turns}/{total_turns} tests completed"
+    breached = any(not t.evaluator_pass for t in traces)
+    
     current_phase = "Sending Prompts" if assessment.status == "RUNNING" else "Idle"
+    if assessment.status == "COMPLETED":
+        if breached:
+            current_phase = "Completed - Target Breached"
+        else:
+            current_phase = "Completed - Target Secure"
+
     progress_percentage = int((completed_turns / total_turns) * 100) if total_turns > 0 else 0
+    if assessment.status == "COMPLETED":
+        progress_percentage = 100 # Fill the bar when finished
 
     return AssessmentStatusResponse(
         assessment_id=assessment.id,
