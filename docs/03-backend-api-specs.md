@@ -102,7 +102,7 @@ Tài liệu này định nghĩa cấu trúc dữ liệu và các API Core để 
     ```
 
 #### `GET /assessments/{assessment_id}/findings`
-*   **Mô tả:** Lấy danh sách các lỗ hổng (Findings) mà hệ thống phát hiện.
+*   **Mô tả:** Lấy danh sách các lỗ hổng (Findings) mà hệ thống phát hiện.s
 *   **Response (200 OK):** Trả về mảng các Object chứa `severity` (CRITICAL, HIGH...), `type` (RAG_POISONING, CANARY_LEAK), `status` (OPEN).
 
 #### `PUT /findings/{finding_id}/status`
