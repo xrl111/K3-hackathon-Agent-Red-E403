@@ -1,8 +1,8 @@
 <template>
   <aside class="w-60 border-r border-surface-border bg-black flex flex-col shrink-0">
     <!-- Workflow Steps -->
-    <nav class="flex-1 p-4 space-y-1">
-      <div class="text-[10px] font-semibold text-text-muted uppercase tracking-widest mb-4 px-3">Assessment Flow</div>
+    <nav class="flex-1 px-4 pt-12 pb-4 space-y-1">
+      <div class="text-[10px] font-semibold text-white uppercase tracking-widest mb-4 px-3">Assessment Flow</div>
       
       <router-link
         v-for="(item, index) in navItems"

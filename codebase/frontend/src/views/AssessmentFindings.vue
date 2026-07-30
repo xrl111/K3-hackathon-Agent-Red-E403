@@ -1,6 +1,9 @@
 <template>
   <div>
-    <PageHeader title="Triage & Review" :subtitle="`Assessment ID: ${assessmentId}`">
+    <PageHeader title="Triage & Review">
+      <template #subtitle>
+        <p class="text-sm text-slate-300 mt-1">Assessment ID: <span class="text-yellow-400">{{ assessmentId }}</span></p>
+      </template>
       <template #actions>
         <AppButton @click="$router.push(`/assessments/${assessmentId}/report`)">
           <FileBarChart class="w-4 h-4" />
@@ -44,17 +47,17 @@
               class="border-b border-surface-border/50 hover:bg-surface-hover transition-colors cursor-pointer group"
               @click="selectedFinding = finding"
             >
-              <td class="px-5 py-3.5 text-sm font-mono text-text-secondary">{{ finding.id }}</td>
+              <td class="px-5 py-3.5 text-sm font-mono text-white">{{ finding.id }}</td>
               <td class="px-5 py-3.5">
                 <AppBadge :severity="finding.severity" :dot="true">{{ finding.severity }}</AppBadge>
               </td>
-              <td class="px-5 py-3.5 text-sm font-mono text-text-secondary">{{ finding.type }}</td>
+              <td class="px-5 py-3.5 text-sm font-mono text-white">{{ finding.type }}</td>
               <td class="px-5 py-3.5">
-                <AppBadge severity="PENDING">{{ finding.status.replace('_', ' ') }}</AppBadge>
+                <AppBadge severity="PENDING" class="!text-white">{{ finding.status.replace('_', ' ') }}</AppBadge>
               </td>
-              <td class="px-5 py-3.5 text-sm text-text-muted max-w-xs truncate">{{ finding.description }}</td>
+              <td class="finding-mono px-5 py-3.5 text-sm text-white max-w-xs truncate">{{ finding.description }}</td>
               <td class="px-5 py-3.5">
-                <span class="text-cyber-cyan text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Review →</span>
+                <span class="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Review →</span>
               </td>
             </tr>
           </tbody>
@@ -82,13 +85,13 @@
       <div class="space-y-5" v-if="selectedFinding">
         <div>
           <h4 class="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-2">Description</h4>
-          <div class="p-4 bg-surface-elevated rounded-lg text-sm text-text-secondary border border-surface-border leading-relaxed">
+          <div class="finding-mono p-4 bg-surface-elevated rounded-lg text-sm text-text-secondary border border-surface-border leading-relaxed">
             {{ selectedFinding.description }}
           </div>
         </div>
         <div>
           <h4 class="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-2">Remediation</h4>
-          <div class="p-4 bg-cyber-cyan-subtle rounded-lg text-sm text-cyber-cyan border border-cyber-cyan/10 leading-relaxed">
+          <div class="finding-mono p-4 bg-cyber-cyan-subtle rounded-lg text-sm text-cyber-cyan border border-cyber-cyan/10 leading-relaxed">
             {{ selectedFinding.remediation }}
           </div>
         </div>
@@ -138,3 +141,9 @@ onMounted(async () => {
   findings.value = res.data;
 });
 </script>
+
+<style scoped>
+.finding-mono {
+  font-family: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+}
+</style>

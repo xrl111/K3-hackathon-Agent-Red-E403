@@ -1,6 +1,9 @@
 <template>
   <div>
-    <PageHeader title="Test Execution Dashboard" :subtitle="`Assessment ID: ${assessmentId}`">
+    <PageHeader title="Test Execution Dashboard">
+      <template #subtitle>
+        <p class="text-sm text-slate-300 mt-1">Assessment ID: <span class="text-yellow-400">{{ assessmentId }}</span></p>
+      </template>
       <template #actions>
         <AppButton variant="secondary" @click="$router.push(`/assessments/${assessmentId}/findings`)">
           <Eye class="w-4 h-4" />
@@ -16,7 +19,7 @@
           <div>
             <div class="text-[11px] font-medium text-text-muted uppercase tracking-wider">Current Phase</div>
             <div class="text-base font-semibold text-cyber-cyan mt-1 flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_6px_rgba(6,182,212,0.5)]"></span>
+              <span class="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_6px_rgba(250,204,21,0.5)]"></span>
               {{ status?.current_phase || 'Initializing...' }}
             </div>
           </div>
@@ -47,13 +50,13 @@
                   :class="activeTrace?.trace_id === trace.trace_id ? 'border-cyber-cyan/40 cyber-glow' : 'border-surface-border hover:border-cyber-cyan/20'"
                   @click="activeTrace = trace"
                 >
-                  <span class="text-text-secondary">{{ trace.prompt }}</span>
+                  <span class="trace-mono text-text-secondary">{{ trace.prompt }}</span>
                   <!-- Evaluator badge -->
                   <div class="mt-2 flex items-center gap-2">
                     <AppBadge :severity="trace.evaluator_pass ? 'PASS' : 'FAIL'" :dot="true">
                       {{ trace.evaluator_pass ? 'PASS' : 'FAIL' }}
                     </AppBadge>
-                    <span class="text-[10px] text-text-muted truncate">{{ trace.evaluator_reason }}</span>
+                    <span class="trace-mono text-[10px] text-text-muted truncate">{{ trace.evaluator_reason }}</span>
                   </div>
                 </div>
               </div>
@@ -61,7 +64,7 @@
               <!-- AI Response (right) -->
               <div class="flex gap-3 items-start flex-row-reverse">
                 <div class="w-7 h-7 rounded-md bg-surface-elevated border border-surface-border text-text-muted flex items-center justify-center shrink-0 text-[10px] font-bold">AI</div>
-                <div class="bg-cyber-cyan/10 border border-cyber-cyan/20 text-text-primary p-3.5 rounded-xl rounded-tr-none text-sm max-w-[80%]">
+                <div class="trace-mono bg-surface-elevated/80 border border-surface-border text-text-primary p-3.5 rounded-xl rounded-tr-none text-sm max-w-[80%]">
                   {{ trace.model_response }}
                 </div>
               </div>
@@ -92,7 +95,7 @@
                 </span>
                 <span class="text-[10px] font-mono text-cyber-cyan">{{ chunk.score.toFixed(2) }}</span>
               </div>
-              <p :class="chunk.is_poisoned ? 'text-severity-critical/90' : 'text-text-secondary'" class="text-xs leading-relaxed">
+              <p :class="chunk.is_poisoned ? 'text-severity-critical/90' : 'text-text-secondary'" class="trace-mono text-xs leading-relaxed">
                 {{ chunk.text }}
               </p>
               <div v-if="chunk.is_poisoned" class="mt-2">
@@ -152,3 +155,9 @@ onMounted(() => {
 
 onUnmounted(() => clearInterval(pollInterval));
 </script>
+
+<style scoped>
+.trace-mono {
+  font-family: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+}
+</style>

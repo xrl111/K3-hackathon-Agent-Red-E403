@@ -5,7 +5,7 @@
     
     <div class="relative z-10">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-[11px] font-medium text-text-muted uppercase tracking-wider">{{ label }}</span>
+        <span class="text-[11px] font-medium text-slate-300 uppercase tracking-wider">{{ label }}</span>
         <component v-if="icon" :is="icon" class="w-4 h-4 text-text-muted" />
       </div>
       <div class="font-mono font-bold leading-none" :class="[valueSizeClass, valueColorClass]">
