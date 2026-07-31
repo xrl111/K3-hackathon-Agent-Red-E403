@@ -2,7 +2,7 @@
   <div>
     <PageHeader title="New Assessment" subtitle="Configure your AI security assessment target and policies" />
 
-    <div class="cyber-card p-6 relative overflow-hidden">
+    <div class="cyber-card max-w-3xl mx-auto p-6 relative overflow-hidden">
 
       <div class="relative space-y-10 max-w-2xl">
 

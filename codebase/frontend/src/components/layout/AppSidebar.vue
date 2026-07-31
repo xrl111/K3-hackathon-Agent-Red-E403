@@ -3,6 +3,27 @@
     <!-- Workflow Steps -->
     <nav class="flex-1 px-4 pt-12 pb-4 space-y-1">
       <div class="text-[10px] font-semibold text-white uppercase tracking-widest mb-4 px-3">Assessment Flow</div>
+
+      <div class="px-3 mb-5">
+        <div class="flex items-center justify-between text-[10px] uppercase tracking-wider mb-2">
+          <span class="text-text-muted">Progress</span>
+          <span class="text-cyber-cyan">{{ currentIndex + 1 }} / {{ navItems.length }}</span>
+        </div>
+        <div class="flex items-center" aria-label="Assessment progress">
+          <template v-for="(item, index) in navItems" :key="item.path">
+            <span
+              :class="[
+                'w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0',
+                index <= currentIndex ? 'bg-cyber-cyan text-slate-950' : 'bg-surface-elevated text-text-muted'
+              ]"
+            >{{ index + 1 }}</span>
+            <span
+              v-if="index < navItems.length - 1"
+              :class="['h-0.5 flex-1 mx-1', index < currentIndex ? 'bg-cyber-cyan' : 'bg-surface-border']"
+            ></span>
+          </template>
+        </div>
+      </div>
       
       <router-link
         v-for="(item, index) in navItems"
