@@ -68,4 +68,5 @@ class AssessmentReportResponse(BaseModel):
     recommendation: str
     metrics: AssessmentReportMetrics
     radar_chart: dict
+    executive_summary: Optional[str] = None
 

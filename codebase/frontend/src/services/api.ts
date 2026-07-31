@@ -34,6 +34,10 @@ export const AssessmentService = {
     return api.get(`/assessments/${id}/report`);
   },
 
+  async generateReportSummary(id: string) {
+    return api.post(`/assessments/${id}/summary`);
+  },
+
   cancelAssessment(id: string) {
     return api.post(`/assessments/${id}/cancel`);
   }

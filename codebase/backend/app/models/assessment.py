@@ -15,6 +15,7 @@ class Assessment(SQLModel, table=True):
     model: str = Field(default="gpt-4o", nullable=False)
     scope: str = Field(default="FULL", nullable=False)
     status: str = Field(default="CREATED", nullable=False, index=True)
+    executive_summary: Optional[str] = Field(default=None, nullable=True)
 
     # Relationships
     config: Optional["AssessmentConfig"] = Relationship(

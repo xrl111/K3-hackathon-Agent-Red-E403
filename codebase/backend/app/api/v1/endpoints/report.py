@@ -127,5 +127,63 @@ async def get_assessment_report(
             total_high=total_high,
             total_medium=total_medium
         ),
-        radar_chart=radar_chart
+        radar_chart=radar_chart,
+        executive_summary=assessment.executive_summary
     )
+
+@router.post(
+    "/{assessment_id}/summary",
+    response_model=dict,
+    summary="Generate AI Executive Summary",
+    tags=["Reporting"]
+)
+async def generate_executive_summary(
+    assessment_id: str,
+    session: Session = Depends(get_session)
+):
+    """
+    Sinh báo cáo tổng kết tự động bằng LLM và lưu vào DB.
+    """
+    assessment = session.get(Assessment, assessment_id)
+    if not assessment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Assessment with ID '{assessment_id}' not found"
+        )
+        
+    findings = session.exec(select(Finding).where(Finding.assessment_id == assessment_id)).all()
+    critical_count = sum(1 for f in findings if f.severity == "CRITICAL" and f.status != "FALSE_POSITIVE")
+    high_count = sum(1 for f in findings if f.severity == "HIGH" and f.status != "FALSE_POSITIVE")
+    medium_count = sum(1 for f in findings if f.severity == "MEDIUM" and f.status != "FALSE_POSITIVE")
+    total_tests = len(session.exec(select(Trace).where(Trace.assessment_id == assessment_id)).all())
+    
+    prompt = (
+        "Đóng vai là một chuyên gia an toàn thông tin (Cybersecurity Expert). "
+        "Hãy viết một đoạn báo cáo tổng kết (Executive Summary) ngắn gọn khoảng 3-4 câu bằng tiếng Việt "
+        f"cho kết quả kiểm thử an ninh của một ứng dụng AI. Ứng dụng đã bị tấn công tổng cộng {total_tests} lần. "
+        f"Phát hiện được {critical_count} lỗi CRITICAL (Nghiêm trọng), {high_count} lỗi HIGH (Cao) và {medium_count} lỗi MEDIUM (Trung bình). "
+        "Hãy đánh giá tổng quan mức độ rủi ro hiện tại và đưa ra khuyến nghị hệ thống có an toàn để triển khai (Go-live) hay không. "
+        "Lưu ý: Không dùng định dạng markdown như in đậm, in nghiêng, chỉ cần văn bản thường."
+    )
+
+    from app.core.llm import get_llm_client
+    from app.core.config import settings
+    client = get_llm_client()
+    
+    try:
+        completion = client.chat.completions.create(
+            extra_headers={"HTTP-Referer": "", "X-Title": ""},
+            model=settings.LLM_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7
+        )
+        summary = completion.choices[0].message.content.strip()
+        
+        assessment.executive_summary = summary
+        session.add(assessment)
+        session.commit()
+        
+        return {"executive_summary": summary}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
