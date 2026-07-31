@@ -1,6 +1,6 @@
 # Reflection cá nhân — UI/UX Frontend
 
-> Họ và tên: _[Bổ sung họ tên và mã học viên trước khi nộp]_
+> Phan Trần Tường Vy 2A202601701
 
 ## Vai trò
 
