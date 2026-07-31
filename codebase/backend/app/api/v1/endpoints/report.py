@@ -157,13 +157,26 @@ async def generate_executive_summary(
     medium_count = sum(1 for f in findings if f.severity == "MEDIUM" and f.status != "FALSE_POSITIVE")
     total_tests = len(session.exec(select(Trace).where(Trace.assessment_id == assessment_id)).all())
     
+    # Extract top pain points
+    from collections import Counter
+    valid_findings = [f for f in findings if f.status != "FALSE_POSITIVE"]
+    top_types = Counter([f.type for f in valid_findings]).most_common(3)
+    pain_points_str = ", ".join([f"{t[0]} ({t[1]} lần)" for t in top_types])
+    if not pain_points_str:
+        pain_points_str = "Không phát hiện lỗ hổng nghiêm trọng nào"
+
     prompt = (
-        "Đóng vai là một chuyên gia an toàn thông tin (Cybersecurity Expert). "
-        "Hãy viết một đoạn báo cáo tổng kết (Executive Summary) ngắn gọn khoảng 3-4 câu bằng tiếng Việt "
-        f"cho kết quả kiểm thử an ninh của một ứng dụng AI. Ứng dụng đã bị tấn công tổng cộng {total_tests} lần. "
-        f"Phát hiện được {critical_count} lỗi CRITICAL (Nghiêm trọng), {high_count} lỗi HIGH (Cao) và {medium_count} lỗi MEDIUM (Trung bình). "
-        "Hãy đánh giá tổng quan mức độ rủi ro hiện tại và đưa ra khuyến nghị hệ thống có an toàn để triển khai (Go-live) hay không. "
-        "Lưu ý: Không dùng định dạng markdown như in đậm, in nghiêng, chỉ cần văn bản thường."
+        "Đóng vai là Giám đốc An ninh mạng (CISO) kiêm Chuyên gia AI Security. "
+        "Hãy viết một đoạn báo cáo Executive Summary ngắn gọn (khoảng 4-5 câu) bằng tiếng Việt cho kết quả kiểm thử an ninh của một ứng dụng AI.\n"
+        f"- Tổng số bài kiểm tra (Total Tests): {total_tests}\n"
+        f"- Lỗ hổng phát hiện: {critical_count} CRITICAL, {high_count} HIGH, {medium_count} MEDIUM.\n"
+        f"- Các điểm yếu chí mạng (Pain points) đang bị khai thác nhiều nhất: {pain_points_str}.\n\n"
+        "Yêu cầu:\n"
+        "1. Đánh giá thẳng thắn về mức độ rủi ro hiện tại của ứng dụng AI dựa trên các con số trên.\n"
+        "2. Xoáy sâu vào các Pain points chính mà hệ thống đang gặp phải.\n"
+        "3. Đưa ra 1-2 lời khuyên/giải pháp kỹ thuật chuyên nghiệp mang tính chiến lược (ví dụ: cần tăng cường system prompt, thêm màng lọc filter, RAG validation, v.v.) để khắc phục.\n"
+        "4. Kết luận hệ thống có đủ điều kiện an toàn để triển khai (Go-live) hay không.\n"
+        "Lưu ý: Viết thành văn xuôi tự nhiên, KHÔNG dùng định dạng markdown (như ** hay *), KHÔNG dùng list gạch đầu dòng."
     )
 
     from app.core.llm import get_llm_client
