@@ -1,0 +1,9 @@
+# Reflection — Nguyễn Minh Hiếu
+
+Trong dự án **Adaptive PI-RAG Red Team Agent**, tôi đảm nhiệm vai trò **Project Manager, Project Owner và Business Analyst**, chịu trách nhiệm xác định phạm vi, xây dựng AI Spec, tổng hợp evidence khảo sát, phân chia đầu việc và bảo đảm sản phẩm tập trung đúng vào bài toán AI tự học từ phản hồi để tạo prompt tấn công mới.
+
+Thách thức lớn nhất của tôi là chuyển ý tưởng ban đầu từ một công cụ chạy test case cố định thành một adaptive agent có objective, attack memory, evaluator và điều kiện dừng rõ ràng, đồng thời giữ phạm vi đủ nhỏ để nhóm năm người có thể triển khai.
+
+Qua dự án, tôi hiểu rằng AI không nên tự quyết định toàn bộ quy trình. AI có thể lựa chọn chiến thuật, tạo prompt và đề xuất finding, nhưng phạm vi kiểm thử, ngân sách, các finding nghiêm trọng và quyết định phát hành vẫn cần được kiểm soát bằng rule và xác nhận bởi con người.
+
+Tôi cũng nhận thấy bản thân cần cải thiện khả năng chốt yêu cầu từ sớm, quản lý các thay đổi trong quá trình phát triển và liên kết mỗi quyết định sản phẩm với evidence cùng metric cụ thể. Những kinh nghiệm này giúp tôi hiểu rõ hơn vai trò của PM và BA trong việc cân bằng giữa giá trị sản phẩm, khả năng kỹ thuật, an toàn và tính khả thi của một dự án AI.
