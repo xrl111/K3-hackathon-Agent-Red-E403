@@ -51,7 +51,7 @@
               <td class="px-5 py-3.5">
                 <AppBadge :severity="finding.severity" :dot="true">{{ finding.severity }}</AppBadge>
               </td>
-              <td class="px-5 py-3.5 text-sm font-mono text-white">{{ finding.type }}</td>
+              <td class="finding-mono px-5 py-3.5 text-sm text-white">{{ finding.type }}</td>
               <td class="px-5 py-3.5">
                 <AppBadge severity="PENDING" class="!text-white">{{ finding.status.replace('_', ' ') }}</AppBadge>
               </td>
@@ -76,7 +76,7 @@
             <TriangleAlert class="w-5 h-5" />
           </span>
           <div>
-            <h3 class="text-base font-bold text-text-primary">{{ selectedFinding?.type }}</h3>
+            <h3 class="finding-mono text-base font-bold text-text-primary">{{ selectedFinding?.type }}</h3>
             <p class="text-xs text-text-muted font-mono mt-0.5">Trace: {{ selectedFinding?.trace_id }}</p>
           </div>
         </div>

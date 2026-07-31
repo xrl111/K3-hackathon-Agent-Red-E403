@@ -14,7 +14,7 @@
 
     <div class="space-y-6">
       <!-- Progress Section -->
-      <AppCard class="animate-fade-in-up">
+      <AppCard class="runner-info-card animate-fade-in-up">
         <div class="flex justify-between items-end mb-4">
           <div>
             <div class="text-[11px] font-medium text-text-muted uppercase tracking-wider">Current Phase</div>
@@ -35,7 +35,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[520px] animate-fade-in-up animate-delay-100">
 
         <!-- Chat View -->
-        <div class="lg:col-span-2 cyber-card flex flex-col overflow-hidden">
+        <div class="runner-info-card lg:col-span-2 cyber-card flex flex-col overflow-hidden">
           <div class="px-5 py-3 border-b border-surface-border bg-surface-card/80 flex items-center gap-2">
             <Terminal class="w-4 h-4 text-cyber-cyan" />
             <span class="text-sm font-semibold text-text-primary">Execution Trace</span>
@@ -73,7 +73,7 @@
         </div>
 
         <!-- RAG Context Panel -->
-        <div class="cyber-card flex flex-col overflow-hidden">
+        <div class="runner-info-card cyber-card flex flex-col overflow-hidden">
           <div class="px-5 py-3 border-b border-surface-border bg-surface-card/80 flex items-center gap-2">
             <Database class="w-4 h-4 text-cyber-cyan" />
             <span class="text-sm font-semibold text-text-primary">RAG Chunks</span>
@@ -159,5 +159,9 @@ onUnmounted(() => clearInterval(pollInterval));
 <style scoped>
 .trace-mono {
   font-family: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+}
+
+.runner-info-card {
+  background: rgba(100, 116, 139, 0.36);
 }
 </style>

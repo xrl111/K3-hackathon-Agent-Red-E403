@@ -16,7 +16,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <!-- Readiness Score Gauge -->
-        <AppCard class="lg:col-span-1 animate-fade-in-up" :padding="false">
+        <AppCard class="report-info-card lg:col-span-1 animate-fade-in-up" :padding="false">
           <div class="p-8 flex flex-col items-center text-center relative overflow-hidden group">
             <!-- Ambient glow -->
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
@@ -47,21 +47,21 @@
           <!-- Metric Cards Row -->
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <MetricCard
-              class="animate-fade-in-up animate-delay-100"
+              class="report-info-card animate-fade-in-up animate-delay-100"
               label="Total Tests"
               :value="report.metrics.total_tests_run"
               :icon="FlaskConical"
               color="cyan"
             />
             <MetricCard
-              class="animate-fade-in-up animate-delay-200"
+              class="report-info-card animate-fade-in-up animate-delay-200"
               label="ASR (Attack Success)"
               :value="report.metrics.attack_success_rate_asr"
               :icon="Crosshair"
               color="warning"
             />
             <MetricCard
-              class="animate-fade-in-up animate-delay-300"
+              class="report-info-card animate-fade-in-up animate-delay-300"
               label="PRR (Poison Retrieval)"
               :value="report.metrics.poison_retrieval_rate_prr"
               :icon="Database"
@@ -70,7 +70,7 @@
           </div>
 
           <!-- Vulnerability Breakdown -->
-          <AppCard title="Vulnerability Breakdown" :padding="false" class="animate-fade-in-up animate-delay-400">
+          <AppCard title="Vulnerability Breakdown" :padding="false" class="report-info-card animate-fade-in-up animate-delay-400">
             <div class="p-6 space-y-5">
               <div v-for="item in breakdownItems" :key="item.label" class="flex items-center gap-4">
                 <div class="w-20 text-xs font-medium text-slate-300 uppercase tracking-wider">{{ item.label }}</div>
@@ -87,7 +87,7 @@
           </AppCard>
 
           <!-- Radar dimensions -->
-          <AppCard title="Security Dimensions" :padding="false" class="animate-fade-in-up animate-delay-500">
+          <AppCard title="Security Dimensions" :padding="false" class="report-info-card animate-fade-in-up animate-delay-500">
             <div class="p-6">
               <div class="space-y-4">
                 <div v-for="(label, i) in report.radar_chart.labels" :key="label" class="flex items-center gap-4">
@@ -145,3 +145,9 @@ const maxBreakdown = computed(() => {
   return Math.max(report.value.metrics.total_critical, report.value.metrics.total_high, report.value.metrics.total_medium, 1);
 });
 </script>
+
+<style scoped>
+.report-info-card {
+  background: rgba(100, 116, 139, 0.36);
+}
+</style>

@@ -8,7 +8,7 @@
         <span class="text-[11px] font-medium text-slate-300 uppercase tracking-wider">{{ label }}</span>
         <component v-if="icon" :is="icon" class="w-4 h-4 text-text-muted" />
       </div>
-      <div class="font-mono font-bold leading-none" :class="[valueSizeClass, valueColorClass]">
+      <div class="font-['JetBrains_Mono'] font-bold leading-none" :class="[valueSizeClass, valueColorClass]">
         {{ value }}
       </div>
       <div v-if="subtitle" class="text-xs text-text-muted mt-2">{{ subtitle }}</div>

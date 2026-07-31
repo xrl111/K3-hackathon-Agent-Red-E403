@@ -39,7 +39,7 @@
   /* Text palette */
   --color-text-primary: #f1f5f9;
   --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
+  --color-text-muted: #cbd5e1;
 
   /* Fonts */
   --font-sans: 'Press Start 2P', "PP NeueBit", sans-serif;
@@ -70,7 +70,7 @@
 @layer utilities {
   /* Card glass surface */
   .cyber-card {
-    background: rgba(100, 116, 139, 0.15);
+    background: rgba(100, 116, 139, 0.24);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(148, 163, 184, 0.15);
@@ -109,7 +109,11 @@
     box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15);
   }
   .cyber-input::placeholder {
-    color: var(--color-text-muted);
+    color: #ffffff;
+    opacity: 1;
+  }
+  .cyber-input.cyber-input--jetbrains {
+    font-family: 'JetBrains Mono', ui-monospace, Consolas, monospace;
   }
 
   /* Scan line animation overlay */

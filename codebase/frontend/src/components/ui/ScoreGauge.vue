@@ -36,8 +36,8 @@
       </svg>
       <!-- Center label -->
       <div class="absolute inset-0 flex flex-col items-center justify-center">
-        <span class="font-black text-text-primary font-mono" :class="valueFontSize">{{ animatedValue }}</span>
-        <span class="text-[10px] font-medium text-text-muted uppercase tracking-widest mt-0.5">/ {{ max }}</span>
+        <span class="font-['JetBrains_Mono'] font-black text-text-primary" :class="valueFontSize">{{ animatedValue }}</span>
+        <span class="font-['JetBrains_Mono'] text-[10px] font-medium text-text-muted uppercase tracking-widest mt-0.5">/ {{ max }}</span>
       </div>
     </div>
   </div>

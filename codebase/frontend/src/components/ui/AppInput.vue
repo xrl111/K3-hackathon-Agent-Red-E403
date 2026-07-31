@@ -17,6 +17,7 @@
         :class="[
           'cyber-input w-full py-2.5 text-sm',
           icon ? 'pl-10 pr-4' : 'px-4',
+          inputClass,
           disabled ? 'opacity-50 cursor-not-allowed' : ''
         ]"
       />
@@ -33,6 +34,7 @@ const props = withDefaults(defineProps<{
   placeholder?: string;
   type?: string;
   icon?: any;
+  inputClass?: string;
   disabled?: boolean;
 }>(), {
   modelValue: '',

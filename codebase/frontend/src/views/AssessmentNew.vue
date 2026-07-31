@@ -10,13 +10,14 @@
         <section class="animate-fade-in-up">
           <div class="flex items-center gap-3 mb-4">
             <span class="w-7 h-7 rounded-md bg-white/15 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center text-xs font-bold">1</span>
-            <h2 class="text-lg font-semibold text-text-primary">Target Configuration</h2>
+            <h2 class="assessment-section-title text-lg text-text-primary">Target Configuration</h2>
           </div>
           <div class="ml-10">
             <AppInput
               v-model="targetUrl"
               label="Target API URL"
               placeholder="https://api.project-target.com/chat"
+              input-class="cyber-input--jetbrains text-white"
               :icon="Globe"
             />
             <div v-if="onboardingStep === 1" class="guide-bubble mt-4">
@@ -41,7 +42,7 @@
         <section class="animate-fade-in-up animate-delay-100">
           <div class="flex items-center gap-3 mb-4">
             <span class="w-7 h-7 rounded-md bg-white/15 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center text-xs font-bold">2</span>
-            <h2 class="text-lg font-semibold text-text-primary">Security Policies</h2>
+            <h2 class="assessment-section-title text-lg text-text-primary">Security Policies</h2>
           </div>
           <div class="ml-10 space-y-2">
             <label
@@ -54,7 +55,7 @@
                 :checked="policy.checked"
                 class="w-4 h-4 rounded border-surface-border accent-yellow-400 text-yellow-400 focus:ring-yellow-400/30 bg-surface-card"
               />
-              <span class="text-sm text-text-secondary group-hover:text-text-primary transition-colors">{{ policy.text }}</span>
+              <span class="font-['JetBrains_Mono'] text-sm text-white transition-colors">{{ policy.text }}</span>
             </label>
             <button class="flex items-center gap-1.5 text-cyber-cyan text-sm font-medium hover:underline mt-3">
               <Plus class="w-3.5 h-3.5" />
@@ -83,7 +84,7 @@
         <section class="animate-fade-in-up animate-delay-200">
           <div class="flex items-center gap-3 mb-4">
             <span class="w-7 h-7 rounded-md bg-white/15 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center text-xs font-bold">3</span>
-            <h2 class="text-lg font-semibold text-text-primary">Test Profiles</h2>
+            <h2 class="assessment-section-title text-lg text-text-primary">Test Profiles</h2>
           </div>
           <div class="ml-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div
@@ -101,7 +102,7 @@
                 <component :is="profile.icon" class="w-4 h-4" :class="selectedProfiles.includes(profile.id) ? 'text-cyber-cyan' : 'text-text-muted'" />
                 <span class="font-medium text-sm">{{ profile.name }}</span>
               </div>
-              <p class="text-xs text-text-muted mt-2 leading-relaxed">{{ profile.description }}</p>
+              <p class="font-['JetBrains_Mono'] text-xs text-white mt-2 leading-relaxed">{{ profile.description }}</p>
               <!-- Selected indicator -->
               <div v-if="selectedProfiles.includes(profile.id)" class="absolute top-3 right-3 w-2 h-2 rounded-full bg-cyber-cyan shadow-[0_0_6px_rgba(250,204,21,0.6)]"></div>
             </div>
@@ -175,6 +176,11 @@ const toggleProfile = (id: string) => {
 </script>
 
 <style scoped>
+.assessment-section-title {
+  font-family: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  font-weight: 700;
+}
+
 .guide-bubble {
   position: relative;
   max-width: 35rem;
