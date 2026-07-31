@@ -9,6 +9,7 @@ class AssessmentCreate(BaseModel):
     policies: List[str] = Field(default_factory=list, description="List of security/safety policies")
     canary_secrets: List[str] = Field(default_factory=list, description="List of canary tokens/secrets to track")
     test_profiles: List[str] = Field(default_factory=list, description="List of test profiles to execute")
+    custom_headers: dict = Field(default_factory=dict, description="Custom headers for the target API")
 
     model_config = ConfigDict(populate_by_name=True)
 
@@ -24,6 +25,7 @@ class AssessmentConfigResponse(BaseModel):
     policies: List[str]
     canary_secrets: List[str]
     test_profiles: List[str]
+    custom_headers: dict
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -37,6 +39,7 @@ class AssessmentResponse(BaseModel):
     policies: Optional[List[str]] = Field(default_factory=list)
     canary_secrets: Optional[List[str]] = Field(default_factory=list)
     test_profiles: Optional[List[str]] = Field(default_factory=list)
+    custom_headers: Optional[dict] = Field(default_factory=dict)
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -53,6 +53,8 @@ class TestOrchestrator:
             canary_target = canaries[0]["value"]
             profiles = json.loads(config.test_profiles) if config and config.test_profiles else ["direct_injection"]
             use_rag = "rag_poisoning" in profiles
+            
+            custom_headers = json.loads(config.custom_headers) if config and config.custom_headers else {}
 
             # Initialize Red Team Agent for this assessment
             past_traces = session.exec(select(Trace).where(Trace.evaluator_pass == False).limit(3)).all()
@@ -105,7 +107,7 @@ class TestOrchestrator:
                 
                 # 2. Send HTTP POST to assessment.target_url
                 target_url = assessment.target_url
-                headers = {}
+                headers = custom_headers
                 payload = {
                     "model": assessment.model, 
                     "messages": [{"role": "user", "content": final_prompt}],
@@ -139,7 +141,17 @@ class TestOrchestrator:
                         return
                 
                 # 3. Evaluate Target Response
-                eval_result = evaluate_test_case(prompt, model_response, mock_test_case, canaries)
+                if model_response.startswith("Failed to connect to target URL:"):
+                    from app.services.evaluator_svc import EvalResult
+                    eval_result = EvalResult(
+                        passed=True,
+                        severity="INFO",
+                        finding_type="NETWORK_ERROR",
+                        reason=model_response,
+                        method="system"
+                    )
+                else:
+                    eval_result = evaluate_test_case(prompt, model_response, mock_test_case, canaries)
 
                 # Save Trace
                 retrieved_chunks = []

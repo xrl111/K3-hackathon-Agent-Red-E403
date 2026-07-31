@@ -41,6 +41,7 @@ class AssessmentConfig(SQLModel, table=True):
     policies: str = Field(default="[]", description="JSON list of policies")
     canary_secrets: str = Field(default="[]", description="JSON list of canary secrets")
     test_profiles: str = Field(default="[]", description="JSON list of test profiles")
+    custom_headers: str = Field(default="{}", description="JSON string of custom headers")
 
     # Relationship back to Assessment
     assessment: Optional[Assessment] = Relationship(back_populates="config")

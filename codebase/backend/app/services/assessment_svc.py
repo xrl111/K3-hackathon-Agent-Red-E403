@@ -24,6 +24,7 @@ class AssessmentService:
             policies=json.dumps(payload.policies, ensure_ascii=False),
             canary_secrets=json.dumps(payload.canary_secrets, ensure_ascii=False),
             test_profiles=json.dumps(payload.test_profiles, ensure_ascii=False),
+            custom_headers=json.dumps(payload.custom_headers, ensure_ascii=False),
         )
         session.add(config)
         session.commit()
@@ -45,6 +46,7 @@ class AssessmentService:
         policies = json.loads(config.policies) if config and config.policies else []
         canary_secrets = json.loads(config.canary_secrets) if config and config.canary_secrets else []
         test_profiles = json.loads(config.test_profiles) if config and config.test_profiles else []
+        custom_headers = json.loads(config.custom_headers) if config and config.custom_headers else {}
 
         return AssessmentResponse(
             id=assessment.id,
@@ -55,4 +57,5 @@ class AssessmentService:
             policies=policies,
             canary_secrets=canary_secrets,
             test_profiles=test_profiles,
+            custom_headers=custom_headers,
         )
