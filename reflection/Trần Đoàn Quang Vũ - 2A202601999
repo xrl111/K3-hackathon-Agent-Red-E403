@@ -1,0 +1,9 @@
+# Reflection — Trần Đoàn Quang Vũ
+
+Trong dự án **Adaptive PI-RAG Red Team Agent**, tôi phụ trách xây dựng **test case và kịch bản kiểm thử**, tập trung vào hai nhóm lỗ hổng chính là **Prompt Injection** và **RAG Poisoning**.
+
+Các công việc tôi đã thực hiện gồm phân tích yêu cầu hệ thống, xây dựng test case cho các trường hợp hợp lệ và lỗi, thiết kế dữ liệu tấn công bằng tiếng Việt và tiếng Anh, đồng thời chuẩn hóa test case dưới dạng JSON để có thể tích hợp vào chương trình. Mỗi test case gồm các thông tin như mục tiêu kiểm thử, dữ liệu đầu vào, các bước thực hiện, kết quả mong đợi, mức độ nghiêm trọng và tiêu chí pass/fail.
+
+Thách thức lớn nhất của tôi là xây dựng test case không chỉ là một câu prompt tấn công đơn lẻ mà phải trở thành một kịch bản hoàn chỉnh. Kịch bản cần mô tả rõ cách chuẩn bị dữ liệu, thực hiện tấn công, theo dõi phản hồi và đánh giá hệ thống có bị khai thác thành công hay không.
+
+Qua dự án, tôi hiểu rõ hơn sự khác nhau giữa test case và kịch bản kiểm thử, cũng như tầm quan trọng của việc xây dựng tiêu chí đánh giá rõ ràng. Tôi cũng nhận thấy bản thân cần cải thiện thêm khả năng bao phủ test, xây dựng nhiều trường hợp biên và tìm hiểu sâu hơn về các kỹ thuật Prompt Injection và RAG Poisoning trong thực tế.
