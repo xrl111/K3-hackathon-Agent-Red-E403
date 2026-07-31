@@ -1,0 +1,17 @@
+# Reflection — Nguyễn Thanh Tùng
+
+Trong dự án **Adaptive PI-RAG Red Team Agent**, tôi đảm nhiệm vai trò **Backend Developer**. Những công việc tôi đã thực hiện gồm:
+
+- Xây dựng và kết nối các API backend phục vụ việc tạo assessment, chạy kiểm thử, theo dõi trạng thái và lấy kết quả report.
+- Thiết kế và sử dụng các schema để chuẩn hóa dữ liệu đầu vào, kết quả đánh giá, finding, evidence và trace.
+- Xử lý luồng chạy assessment, bao gồm objective, attack strategy, evaluator, điều kiện dừng và giới hạn số lần thử.
+- Tích hợp RAG với vector store để truy xuất các attack memory hoặc dữ liệu liên quan, từ đó hỗ trợ agent tạo các prompt tấn công phù hợp hơn.
+- Kết nối các service và worker để thực hiện những tác vụ kiểm thử có thể chạy lâu, đồng thời lưu lại trạng thái và kết quả trong quá trình xử lý.
+- Chuẩn hóa finding và kết quả đánh giá để frontend có thể hiển thị, đồng thời hỗ trợ việc tạo report và kiểm tra lại evidence.
+- Viết và chạy các test cho API, assessment, RAG, report, runner và vector store; kiểm tra các trường hợp lỗi như dữ liệu không hợp lệ hoặc kết quả thiếu trường bắt buộc.
+
+Thách thức lớn nhất của tôi là kết nối các thành phần backend thành một pipeline hoàn chỉnh thay vì chỉ chạy một danh sách test case cố định. Các bước tạo prompt, thực thi kiểm thử, đánh giá kết quả, truy xuất memory và lưu finding phải được thực hiện đúng thứ tự. Nếu một service trả về dữ liệu sai cấu trúc hoặc worker không cập nhật trạng thái chính xác, assessment và report cuối cùng đều có thể bị ảnh hưởng.
+
+Qua dự án, tôi hiểu rằng backend cho hệ thống AI không chỉ cần gọi được model mà còn phải kiểm soát tốt trạng thái, lỗi và khả năng truy vết. Kết quả do AI sinh ra cần được chuẩn hóa, lưu cùng evidence và trace để có thể kiểm tra lại. Những rule về phạm vi kiểm thử, timeout, số lần thử và mức độ nghiêm trọng của finding cũng cần được xử lý ở backend thay vì phụ thuộc hoàn toàn vào model hoặc giao diện người dùng.
+
+Tôi nhận thấy bản thân cần cải thiện thêm việc thiết kế schema ngay từ đầu, viết test cho nhiều trường hợp lỗi hơn và chủ động kiểm tra contract giữa backend với frontend. Dự án giúp tôi hiểu rõ hơn vai trò của Backend Developer trong việc biến một quy trình AI phức tạp thành các service ổn định, có thể quan sát, dễ kiểm thử và đủ tin cậy để sử dụng trong thực tế.
