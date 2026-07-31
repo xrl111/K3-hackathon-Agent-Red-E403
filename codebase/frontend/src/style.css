@@ -32,6 +32,7 @@
   /* Surface palette */
   --color-surface-bg: #020617;
   --color-surface-card: #0f172a;
+  --color-surface-card-strong: rgba(30, 41, 59, 0.9);
   --color-surface-elevated: #1e293b;
   --color-surface-border: #334155;
   --color-surface-hover: rgba(255, 255, 255, 0.03);
@@ -70,7 +71,7 @@
 @layer utilities {
   /* Card glass surface */
   .cyber-card {
-    background: rgba(100, 116, 139, 0.24);
+    background: var(--color-surface-card-strong);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(148, 163, 184, 0.15);

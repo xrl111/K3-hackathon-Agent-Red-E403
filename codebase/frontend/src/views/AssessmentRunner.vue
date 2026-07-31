@@ -162,6 +162,6 @@ onUnmounted(() => clearInterval(pollInterval));
 }
 
 .runner-info-card {
-  background: rgba(100, 116, 139, 0.36);
+  background: var(--color-surface-card-strong);
 }
 </style>
